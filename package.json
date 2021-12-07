@@ -4,8 +4,7 @@
   "description": "",
   "scripts": {
     "test": "jest --detectOpenHandles --forceExit",
-    "build": "npx tsc",
-    "publish": "npm publish $(npm pack)"
+    "build": "npx tsc"
   },
   "keywords": [],
   "author": "",

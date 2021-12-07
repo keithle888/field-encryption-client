@@ -15,7 +15,10 @@ jobs:
       - checkout
       - run: npm ci
       - run: npm run build
-      - run: npm run publish
+      - run:
+          name: Authenticate with registry
+          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
+      - run: npm publish $(npm pack)
 
 workflows:
   version: 2
@@ -28,6 +31,8 @@ workflows:
             branches:
               only: /.*/
       - publish:
+          context:
+            - npm-publishing-context
           requires:
             - unit_test
           filters: # run for only semver tags
