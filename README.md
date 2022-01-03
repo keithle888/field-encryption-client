@@ -1,4 +1,6 @@
 # field-encryption-client
+[![circleci](https://circleci.com/gh/keithle888/field-encryption-client.svg?style=shield)](https://circleci.com/gh/keithle888/field-encryption-client)
+
 This package simplifies [client-side field encryption](https://www.mongodb.com/client-side-encryption) implementation to the point where the developer only needs to worry about encryption/decrypting field data & storing the encrypted data key (DEK).
 
 *Note: This library currently only supports AWS KMS for the key-encryption-key (KEK) via AWS SDK v3.*
