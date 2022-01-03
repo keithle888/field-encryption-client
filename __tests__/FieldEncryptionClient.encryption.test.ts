@@ -3,8 +3,8 @@ import {DataEncryptionKey, FieldEncryptionClient} from "../src";
 import {AES_GCM_256_KEY_LENGTH} from "../src/crypto/crypto";
 
 const dek: DataEncryptionKey = {
-    keyId: 'keyId',
     keyMaterial: crypto.randomBytes(AES_GCM_256_KEY_LENGTH),
+    keyMaterialEnc: crypto.randomBytes(AES_GCM_256_KEY_LENGTH),
 };
 const plaintext = Buffer.from('a plaintext string', 'utf-8');
 
@@ -19,8 +19,8 @@ test('Encrypt & decrypt a payload', () => {
 
 test('Encrypt & decrypt a payload with the different key should yield an error', () => {
     const aDiffKey: DataEncryptionKey = {
-        keyId: 'someOtherId',
-        keyMaterial: crypto.randomBytes(AES_GCM_256_KEY_LENGTH)
+        keyMaterial: crypto.randomBytes(AES_GCM_256_KEY_LENGTH),
+        keyMaterialEnc: crypto.randomBytes(AES_GCM_256_KEY_LENGTH),
     };
 
     expect(
