@@ -22,8 +22,7 @@
     "dist"
   ],
   "dependencies": {
-    "@aws-sdk/client-kms": "^3.43.0",
-    "mongoose": "^6.0.14"
+    "@aws-sdk/client-kms": "^3.43.0"
   },
   "config": {
     "mongodbMemoryServer": {
