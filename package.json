@@ -1,6 +1,6 @@
 {
   "name": "field-encryption-client",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "",
   "scripts": {
     "test": "jest --detectOpenHandles --forceExit",

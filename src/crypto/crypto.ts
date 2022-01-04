@@ -30,36 +30,26 @@ export function decryptAES256GCM(ciphertext: Buffer, authTag: Buffer, cipherkey:
  * @param ciphertext
  * @param authTag
  * @param iv
- * @param aead
  */
-export function encodeCipher(ciphertext: Buffer, authTag: Buffer, iv: Buffer, aead?: Buffer): string {
+export function encodeCipher(ciphertext: Buffer, authTag: Buffer, iv: Buffer): Buffer {
     const enc = Buffer.alloc(ciphertext.length + authTag.length + iv.length);
     ciphertext.copy(enc);
     authTag.copy(enc, ciphertext.length);
     iv.copy(enc, ciphertext.length + authTag.length);
-    if (aead === undefined) {
-        return enc.toString('base64');
-    }
-    else {
-        return `${enc.toString('base64')}.${aead.toString('base64')}`;
-    }
+    return enc;
 }
 
 /**
  * Decode cipher stored in the database into the individual cipher values
  * @param cipher
  */
-export function decodeCipher(cipher: string): { ciphertext: Buffer, authTag: Buffer, iv: Buffer, aead?: Buffer } {
-    const strs = cipher.split('.');
-    let aead: Buffer | undefined = undefined;
-    const cBuf = Buffer.from(strs[0], 'base64');
-    const ciphertextLength = cBuf.length - (AES_GCM_256_AUTH_TAG_LENGTH + AES_GCM_256_IV_LENGTH);
+export function decodeCipher(cipher: Buffer): { ciphertext: Buffer, authTag: Buffer, iv: Buffer } {
+    const ciphertextLength = cipher.length - (AES_GCM_256_AUTH_TAG_LENGTH + AES_GCM_256_IV_LENGTH);
     const ciphertext = Buffer.alloc(ciphertextLength);
     const authTag = Buffer.alloc(AES_GCM_256_AUTH_TAG_LENGTH);
     const iv = Buffer.alloc(AES_GCM_256_IV_LENGTH);
-    cBuf.copy(ciphertext, 0, 0, ciphertextLength);
-    cBuf.copy(authTag, 0, ciphertextLength, ciphertextLength + AES_GCM_256_AUTH_TAG_LENGTH);
-    cBuf.copy(iv, 0, ciphertextLength + AES_GCM_256_AUTH_TAG_LENGTH);
-    if (strs.length > 1) aead = Buffer.from(strs[1], 'base64');
-    return { ciphertext, authTag, iv, aead };
+    cipher.copy(ciphertext, 0, 0, ciphertextLength);
+    cipher.copy(authTag, 0, ciphertextLength, ciphertextLength + AES_GCM_256_AUTH_TAG_LENGTH);
+    cipher.copy(iv, 0, ciphertextLength + AES_GCM_256_AUTH_TAG_LENGTH);
+    return { ciphertext, authTag, iv };
 }

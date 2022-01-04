@@ -26,10 +26,11 @@ export class FieldEncryptionClient {
 
     /**
      * Encrypt a field based on a DEK provided
-     * @param field
-     * @param dek
+     * @param field field as a buffer
+     * @param dek Data encryption key
+     * @param algo Algorithm to encrypt the field with.
      */
-    static encrypt(field: Buffer, dek: DataEncryptionKey): string {
+    static encrypt(field: Buffer, dek: DataEncryptionKey, algo: 'AES-256-GCM-WITHOUT-AEAD' = 'AES-256-GCM-WITHOUT-AEAD'): Buffer {
         // Encrypt field
         const cipher = encryptAES256GCM(
             field,
@@ -42,8 +43,7 @@ export class FieldEncryptionClient {
         return encodeCipher(
             cipher.ciphertext,
             cipher.authTag,
-            cipher.iv,
-            cipher.aead
+            cipher.iv
         );
     }
 
@@ -51,8 +51,9 @@ export class FieldEncryptionClient {
      * Decrypt a field. The data key will be retrieved based on the data-key & key-encryption-key config
      * @param field
      * @param dek
+     * @param algo Algorithm to decrypt the field with.
      */
-    static decrypt(field: string, dek: DataEncryptionKey): Buffer {
+    static decrypt(field: Buffer, dek: DataEncryptionKey, algo: 'AES-256-GCM-WITHOUT-AEAD' = 'AES-256-GCM-WITHOUT-AEAD'): Buffer {
         // Get DEK key ID from aead.
         const decodedField = decodeCipher(field);
 
@@ -60,8 +61,7 @@ export class FieldEncryptionClient {
             decodedField.ciphertext,
             decodedField.authTag,
             dek.keyMaterial,
-            decodedField.iv,
-            decodedField.aead
+            decodedField.iv
         );
     }
 
